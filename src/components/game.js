@@ -1,21 +1,25 @@
 import React from 'react';
 
-import {restartGame} from '../actions'
+import {restartGame,makeGuess} from '../actions'
 import Header from './header';
 import GuessSection from './guess-section';
 import StatusSection from './status-section';
 import InfoSection from './info-section';
 import {connect} from 'react-redux';
 export class Game extends React.Component {
+  /*
   constructor(props) {
     super(props);
+    
     this.state = {
       guesses: [],
       feedback: 'Make your guess!',
       auralStatus: '',
       correctAnswer: Math.floor(Math.random() * 100) + 1
     };
+    
   }
+  */
   /*
   restartGame() {
     this.setState({
@@ -26,14 +30,15 @@ export class Game extends React.Component {
     });
   }
   */
-  makeGuess(guess) {
+  makeGuessComp(guess) {
+    /*
     guess = parseInt(guess, 10);
     if (isNaN(guess)) {
       this.setState({ feedback: 'Please enter a valid number' });
       return;
     }
 
-    const difference = Math.abs(guess - this.state.correctAnswer);
+    const difference = Math.abs(guess - this.props.correctAnswer);
 
     let feedback;
     if (difference >= 50) {
@@ -50,18 +55,19 @@ export class Game extends React.Component {
 
     this.setState({
       feedback,
-      guesses: [...this.state.guesses, guess]
+      guesses: [...this.props.guesses, guess]
     });
-
+    */
     // We typically wouldn't touch the DOM directly like this in React
     // but this is the best way to update the title of the page,
     // which is good for giving screen-reader users
     // instant information about the app.
-    document.title = feedback ? `${feedback} | Hot or Cold` : 'Hot or Cold';
+    this.props.dispatch(makeGuess(guess));
+    //document.title = feedback ? `${feedback} | Hot or Cold` : 'Hot or Cold';
   }
 
   generateAuralUpdate() {
-    const { guesses, feedback } = this.state;
+    const { guesses, feedback } = this.props;
 
     // If there's not exactly 1 guess, we want to
     // pluralize the nouns in this aural update.
@@ -78,7 +84,7 @@ export class Game extends React.Component {
   }
 
   render() {
-    const { feedback, guesses, auralStatus } = this.state;
+    const { feedback, guesses, auralStatus } = this.props;
     const guessCount = guesses.length;
 
     return (
@@ -91,7 +97,7 @@ export class Game extends React.Component {
           <GuessSection
             feedback={feedback}
             guessCount={guessCount}
-            onMakeGuess={guess => this.makeGuess(guess)}
+            onMakeGuess={guess => this.makeGuessComp(guess)}
           />
           <StatusSection guesses={guesses} 
             auralStatus={auralStatus}
